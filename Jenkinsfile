@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "your-docker-username/full-cicd-demo:latest"
+        DOCKER_IMAGE = "akshitavidiyala/full-cicd-demo:latest"
     }
 
     stages {
+
         stage('Checkout') {
             steps {
-                // Gets code from the same Git repo where Jenkinsfile lives
                 checkout scm
             }
         }
@@ -27,21 +27,18 @@ pipeline {
 
         stage('Build Docker image') {
             steps {
-                script {
-                    sh "docker build -t ${DOCKER_IMAGE} ."
-                }
+                sh "docker build -t ${DOCKER_IMAGE} ."
             }
         }
 
         stage('Push to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-cred',
-                                                 usernameVariable: 'DOCKER_USER',
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds2', 
+                                                 usernameVariable: 'DOCKER_USER', 
                                                  passwordVariable: 'DOCKER_PASS')]) {
                     sh '''
-                      echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                      docker push ${DOCKER_IMAGE}
-                      docker logout
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push ${DOCKER_IMAGE}
                     '''
                 }
             }
@@ -49,11 +46,10 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                // Assumes kubectl is already configured on Jenkins machine
                 sh '''
-                  kubectl apply -f k8s/deployment.yaml
-                  kubectl apply -f k8s/service.yaml
-                  kubectl rollout status deployment/full-cicd-demo
+                    kubectl apply -f k8s/deployment.yaml
+                    kubectl apply -f k8s/service.yaml
+                    kubectl rollout status deployment/full-cicd-demo
                 '''
             }
         }
