@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: full-cicd-demo
+  labels:
+    app: full-cicd-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: full-cicd-demo
+  template:
+    metadata:
+      labels:
+        app: full-cicd-demo
+    spec:
+      containers:
+        - name: full-cicd-demo
+          image: full-cicd-demo:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4001
+

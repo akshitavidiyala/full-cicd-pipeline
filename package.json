@@ -1,0 +1,17 @@
+{
+  "name": "full-cicd-demo",
+  "version": "1.0.0",
+  "description": "Full CI/CD demo app",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}
+
